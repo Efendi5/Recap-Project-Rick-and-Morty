@@ -17,15 +17,12 @@ export const pagination = document.querySelector('[data-js="pagination"]');
 // States
 export let maxPage = 1;
 export let page = 1;
-export let searchQuery = "";
+export let searchQuery = "https://rickandmortyapi.com/api/character/";
 
-async function fetchCharacters(currentpage) {
+async function fetchCharacters(url) {
   cardContainer.innerHTML = "";
   try {
-    const response = await fetch(
-      `https://rickandmortyapi.com/api/character/?page=${currentpage}`,
-      { method: "GET" }
-    );
+    const response = await fetch(`${url}`, { method: "GET" });
     if (!response.ok) {
       console.log("Bad response");
     } else {
@@ -43,4 +40,4 @@ async function fetchCharacters(currentpage) {
   }
 }
 
-fetchCharacters();
+fetchCharacters(searchQuery);
