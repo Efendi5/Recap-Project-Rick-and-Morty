@@ -1,6 +1,6 @@
 console.clear();
 // import von card.js
-import { createCharacterCard } from "./card.js";
+import { createCharacterCard } from "./components/card/card.js";
 
 export const cardContainer = document.querySelector(
   '[data-js="card-container"]'
@@ -30,10 +30,9 @@ async function fetchCharacters(currentpage) {
       console.log("Bad response");
     } else {
       const characterData = await response.json();
-      const filteredCharacters = characterData.filter(
-        (character) => character.id <= 20
-      );
-      filteredCharacters.forEach((character) => {
+
+      console.log(characterData);
+      characterData.results.forEach((character) => {
         const newCard = createCharacterCard(character);
         cardContainer.append(newCard);
       });
