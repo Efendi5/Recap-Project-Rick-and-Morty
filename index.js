@@ -2,31 +2,46 @@ console.clear();
 // import von card.js
 import { createCharacterCard } from "./card.js";
 
-const cardContainer = document.querySelector('[data-js="card-container"]');
-const searchBarContainer = document.querySelector(
+export const cardContainer = document.querySelector(
+  '[data-js="card-container"]'
+);
+export const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]'
 );
-const searchBar = document.querySelector('[data-js="search-bar"]');
-const navigation = document.querySelector('[data-js="navigation"]');
-const prevButton = document.querySelector('[data-js="button-prev"]');
-const nextButton = document.querySelector('[data-js="button-next"]');
-const pagination = document.querySelector('[data-js="pagination"]');
+export const searchBar = document.querySelector('[data-js="search-bar"]');
+export const navigation = document.querySelector('[data-js="navigation"]');
+export const prevButton = document.querySelector('[data-js="button-prev"]');
+export const nextButton = document.querySelector('[data-js="button-next"]');
+export const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-const maxPage = 1;
-const page = 1;
-const searchQuery = "";
+export let maxPage = 1;
+export let page = 1;
+export let searchQuery = "";
 
-// states hinzugefügt durch card.js
-// 1. für die Karte und 2. für den Container
-const card = createCharacterCard(character);
-cardContainer.append(card);
+async function fetchCharacters(currentpage) {
+  cardContainer.innerHTML = "";
+  try {
+    const response = await fetch(
+      `https://rickandmortyapi.com/api/character/?page=${currentpage}`,
+      { method: "GET" }
+    );
+    if (!response.ok) {
+      console.log("Bad response");
+    } else {
+      const characterData = await response.json();
+      const filteredCharacters = characterData.filter(
+        (character) => character.id <= 20
+      );
+      filteredCharacters.forEach((character) => {
+        const newCard = createCharacterCard(character);
+        cardContainer.append(newCard);
+      });
+      page++;
+    }
+  } catch (error) {
+    console.error("An error occured");
+  }
+}
 
-// Beispiel für character
-const character = {
-  name: "Morty Smith",
-  image: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-  status: "Alive",
-  type: "",
-  episode: ["https://rickandmortyapi.com/api/episode/1"],
-};
+fetchCharacters();
